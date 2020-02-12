@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <style>
+   H1 { 
+    font-size: 120%; 
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    color: #333366; 
+   }
+  </style>
+  	<script>
+	var Game = function() {
+		var teamsCount = 0;
+		var wordsCount = 0;
+		var teams = {};
+		
+		return {
+			setCount:function() {
+				teamsCount = +document.getElementById('countTeams').value;
+				wordsCount = +document.getElementById('countWord').value;
+				document.getElementById('page1').style.display="none";
+				document.getElementById('page2').style.display="block";
+
+				debugger;
+			},
+			setTeam:function() {
+				document.getElementById('page2').style.display="none";
+			}
+			
+		}
+	}
+	var game = Game();
+	</script>
+</head>
+<body>
+	<div id="page1">
+		<p>Количество команд</p>
+		<input type="text" id="countTeams">
+		<p>Количество слов</p>
+		<input type="text" id="countWord">
+		<br><input type="submit" value="далее" onclick="game.setCount();">
+	</div>
+	
+	
+<div id="page2" style='display:none'>
+	<p>Команда 1</p>
+	<p>Игрок 1</p>
+	<input type="text" id="player1">
+	<p>Игрок 2</p>
+	<input type="text" id="player2">
+	<br><input type="submit" value="далее" onclick="game.setTeam();">
+
+</div>
+</body>
+</html>
