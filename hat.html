@@ -1,18 +1,20 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
 <head>
-  <style>
-   H1 { 
-    font-size: 120%; 
-    font-family: Verdana, Arial, Helvetica, sans-serif; 
-    color: #333366; 
-   }
+	<meta charset="utf-8">
+	<style>
+	body {     
+	text-align: center;
+	weight: 100%;
+	}
   </style>
   	<script>
 	var Game = function() {
 		var teamsCount = 0;
 		var wordsCount = 0;
 		var teams = {};
+		var words = [];
+		var roundWords;
 		
 		return {
 			setCount:function() {
@@ -20,13 +22,73 @@
 				wordsCount = +document.getElementById('countWord').value;
 				document.getElementById('page1').style.display="none";
 				document.getElementById('page2').style.display="block";
-
-				debugger;
 			},
-			setTeam:function() {
-				document.getElementById('page2').style.display="none";
-			}
 			
+			setTeam:function() {			
+				for (var i = 0; i < teamsCount; i++) {
+					if (teams[i] == undefined) {
+						teams[i] = {};
+						teams[i][0] = document.getElementById('player1').value;
+						if (i == 0) {
+							document.getElementById('currentPlayer').innerHTML = document.getElementById('player1').value;
+						}
+						teams[i][1] = document.getElementById('player2').value;
+						document.getElementById('player1').value = '';
+						document.getElementById('player2').value = '';
+						document.getElementById('currentTeam').innerHTML = (i+2);
+						
+						if (i == teamsCount - 1) {
+							document.getElementById('page2').style.display="none";				
+							document.getElementById('page3').style.display="block";
+						}
+						return;
+					}					
+				}				
+			},			
+			
+			setWords:function() {
+				var player = document.getElementById('currentPlayer').innerHTML;
+				var playerIndex = 0;
+				for (var i = 0; i < teamsCount; i++){
+					for (var j = 0; j < 2; j++){
+						if (teams[i][j] == player) {
+							playerIndex = i*2 + j;
+							var wordIndex = wordsCount * (playerIndex + 1) - words.length - 1;
+							words.push(document.getElementById('word').value);
+							document.getElementById('word').value = '';
+							
+							if (wordIndex == 0) {
+								if (words.length == teamsCount * 2 * wordsCount) {
+									document.getElementById('page3').style.display="none";				
+									document.getElementById('page4').style.display="block";
+								}
+								document.getElementById('currentPlayer').innerHTML = (playerIndex+1)%2 == 0 ? teams[i+1][0] : teams[i][j+1];
+							}
+							return;
+						}
+					}	
+				}
+			},
+
+			start:function() {
+				roundWords = words.slice().sort(() => Math.random() - 0.5);
+				document.getElementById('guessWord').innerHTML = roundWords[roundWords.length-1];
+				document.getElementById('pageStart').style.display="none";				
+				document.getElementById('pageNextPlayer').style.display="block";
+			},
+			
+			nextPlayer:function() {
+				
+			},
+			
+			guessed:function() {
+				roundWords.pop();
+				if (!roundWords.length) {
+					game.start();
+					return;
+				}
+				document.getElementById('guessWord').innerHTML = roundWords[roundWords.length-1];
+			}
 		}
 	}
 	var game = Game();
@@ -35,21 +97,44 @@
 <body>
 	<div id="page1">
 		<p>Количество команд</p>
-		<input type="text" id="countTeams">
+		<input type="text" id="countTeams"  value="1">
 		<p>Количество слов</p>
-		<input type="text" id="countWord">
+		<input type="text" id="countWord"  value="1">
 		<br><input type="submit" value="далее" onclick="game.setCount();">
 	</div>
+		
+	<div id="page2" style='display:none'>
+		<p>Команда <span id="currentTeam">1</span></p>
+		<p>Игрок 1</p>
+		<input type="text" id="player1" value="1">
+		<p>Игрок 2</p>
+		<input type="text" id="player2" value="2">
+		<br><input type="submit" value="далее" onclick="game.setTeam();">
+	</div>
 	
+	<div id="page3" style='display:none'>
+		<p id="currentPlayer"></p>
+		<p>Введите слово</p>
+		<input type="text" id="word"  value="s1">
+		<br><input type="submit" value="добавить" onclick="game.setWords();">
+	</div>
 	
-<div id="page2" style='display:none'>
-	<p>Команда 1</p>
-	<p>Игрок 1</p>
-	<input type="text" id="player1">
-	<p>Игрок 2</p>
-	<input type="text" id="player2">
-	<br><input type="submit" value="далее" onclick="game.setTeam();">
-
-</div>
+	<div id="pageStart" style='display:none'>
+		<p>Раунд 1</p>
+		<p>Описание</p>
+		<br><input type="submit" value="начать" onclick="game.start();">
+	</div>
+	
+	<div id="pageNextPlayer" style='display:none'>
+		<p>Команда 1</p>
+		<p>Игрок 1</p>
+		<br><input type="submit" value="начать" onclick="game.nextPlayer();">
+	</div>
+	
+	<div id="pageGuessed" style='display:none'>
+		<p>таймер</p>
+		<p id="guessWord"></p>
+		<br><input type="submit" value="отгадано" onclick="game.guessed();">
+	</div>
 </body>
 </html>
