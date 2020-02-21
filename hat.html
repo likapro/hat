@@ -4,11 +4,105 @@
 	<meta charset="utf-8">
 	<style>
 	body {     
-	text-align: center;
-	weight: 100%;
+		text-align: center;
+		weight: 100%;
+		background-color: DeepPink;
+		color: white;
+		text-transform: uppercase;
+		text-shadow: 1px 1px DarkGray;
+		font-family: "Times New Roman", Times, serif;
 	}
-  </style>
-  	<script>
+	
+	.button  {
+		padding: 15px 40px;
+		margin-top: 5px;
+		border: 4px solid Gold;
+		color: Gold;
+		text-transform: uppercase;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		background-color: transparent;
+		letter-spacing: 3px;
+		font-weight: bold;		
+		outline: none;
+	}
+	
+	.buttonGuessed  {
+		padding: 15px 40px;
+		margin-top: 5px;
+		border: 4px solid MediumSeaGreen;
+		color: white;
+		text-transform: uppercase;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		background-color: MediumSeaGreen;
+		letter-spacing: 3px;
+		font-weight: bold;	
+        outline: none;		
+	}
+		
+	.amount span {
+		display:inline-block;
+		width:50px;
+		height: 47px;
+		text-align:center;
+		background-color: transparent;
+		font-size: 40px;
+		text-shadow: none;
+		font-weight: bold;	
+	}
+	
+	.amount input {
+		width: 45px;
+		text-align:center;
+		padding: 10px 10px;
+		border: none;
+		font-size: 30px;
+		color: MistyRose;
+		background-color: transparent;
+	}
+	
+	.enterWord {
+		background-color: transparent;
+		border: none;
+		border-bottom: 3px solid Gold;
+		font-size: 20px;
+		color: MistyRose;
+		outline: none;
+	}
+	
+	.top {margin-top: 35px;}
+	
+	.guessWord {
+		width: 45px;
+		text-align:center;
+		padding: 10px 10px;
+		border: none;
+		font-size: 30px;
+		color: MistyRose;
+		background-color: transparent;
+	}
+	
+    </style>
+  
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+		$('.down').click(function () {
+			var $input = $(this).parent().find('input');
+			var count = parseInt($input.val()) - 1;
+			count = count < 1 ? 1 : count;
+			$input.val(count);
+			$input.change();
+			return false;
+		});
+		$('.up').click(function () {
+			var $input = $(this).parent().find('input');
+			$input.val(parseInt($input.val()) + 1);
+			$input.change();
+			return false;
+		});
+	});
+	
+	
 	var Game = function() {
 		var teamsCount = 0;
 		var wordsCount = 0;
@@ -36,7 +130,7 @@
 				teamsCount = +document.getElementById('countTeams').value;
 				wordsCount = +document.getElementById('countWord').value;
 				document.getElementById('page1').style.display="none";
-				document.getElementById('page2').style.display="block";
+				document.getElementById('pageNamePlayer').style.display="block";
 			},
 			
 			setTeam:function() {			
@@ -54,7 +148,7 @@
 						document.getElementById('currentTeam').innerHTML = (i+2);
 						
 						if (i == teamsCount - 1) {
-							document.getElementById('page2').style.display="none";				
+							document.getElementById('pageNamePlayer').style.display="none";				
 							document.getElementById('page3').style.display="block";
 						}
 						return;
@@ -94,6 +188,7 @@
 			},
 			
 			startPlayer:function() {
+			debugger
 				time = 21;
 				roundTimer();
 				document.getElementById('pageStartPlayer').style.display="none";				
@@ -115,55 +210,64 @@
 		}
 	}
 	var game = Game();
+
 	</script>
 </head>
 <body>
 	<div id="page1">
-		<p>Количество команд</p>
-		<input type="text" id="countTeams"  value="1">
-		<p>Количество слов</p>
-		<input type="text" id="countWord"  value="1">
-		<br><input type="submit" value="далее" onclick="game.setCount();">
+		<div class="amount">
+			<p>Количество команд</p>
+			<span class="down plusMinus">--</span>
+			<input type="text" id="countTeams"  value="1">
+			<span class="up">+</span>
+		</div>
+			<div class="amount">
+			<p>Количество слов</p>
+			<span class="down">--</span>
+			<input type="text" id="countWord"  value="1">
+			<span class="up">+</span>
+		</div>
+		<br><input class="button" type="submit" value="далее" onclick="game.setCount();">
 	</div>
 		
-	<div id="page2" style='display:none'>
+	<div id="pageNamePlayer" style='display:none'>
 		<p>Команда <span id="currentTeam">1</span></p>
-		<p>Игрок 1</p>
-		<input type="text" id="player1" value="1">
-		<p>Игрок 2</p>
-		<input type="text" id="player2" value="2">
-		<br><input type="submit" value="далее" onclick="game.setTeam();">
+		<p>Имя игрока 1</p>
+		<input class="enterWord" type="text" id="player1" value="1">
+		<p class="top">Имя игрока 2</p>
+		<input class="enterWord" type="text" id="player2" value="2">
+		<br><input class="button top" type="submit" value="далее" onclick="game.setTeam();">
 	</div>
 	
 	<div id="page3" style='display:none'>
 		<p id="currentPlayer"></p>
 		<p>Введите слово</p>
-		<input type="text" id="word"  value="s1">
-		<br><input type="submit" value="добавить" onclick="game.setWords();">
+		<input class="enterWord" type="text" id="word"  value="s1">
+		<br><input class="button top" type="submit" value="добавить" onclick="game.setWords();">
 	</div>
 	
 	<div id="pageStartRound" style='display:none'>
 		<p>Раунд 1</p>
 		<p>Описание</p>
-		<br><input type="submit" value="начать" onclick="game.start();">
+		<br><input class="button" type="submit" value="начать" onclick="game.start();">
 	</div>
 	
 	<div id="pageStartPlayer" style='display:none'>
 		<p>Команда 1</p>
 		<p>Игрок 1</p>
-		<br><input type="submit" value="начать" onclick="game.startPlayer();">
+		<br><input class="button" type="submit" value="начать" onclick="game.startPlayer();">
 	</div>
 	
 	<div id="pageGuessed" style='display:none'>
 		<p id="timer">таймер</p>
-		<p id="guessWord"></p>
-		<br><input type="submit" value="отгадано" onclick="game.guessed();">
+		<p class="guessWord" id="guessWord"></p>
+		<br><input class="buttonGuessed" type="submit" value="отгадано" onclick="game.guessed();">
 	</div>
 	
 	<div id="pageResultPlayer" style='display:none'>
 		<p>отгадано слов</p>
-		<p id="countGuessWord"></p>
-		<br><input type="submit" value="далее" onclick="game.();">
+		<p id="countGuessWord">0</p>
+		<br><input class="button" type="submit" value="далее" onclick="game.();">
 	</div>
 </body>
 </html>
