@@ -67,6 +67,7 @@
 		font-size: 20px;
 		color: MistyRose;
 		outline: none;
+		text-align: center;
 	}
 	
 	.top {margin-top: 35px;}
@@ -101,7 +102,6 @@
 			return false;
 		});
 	});
-	
 	
 	var Game = function() {
 		var teamsCount = 0;
@@ -188,7 +188,6 @@
 			},
 			
 			startPlayer:function() {
-			debugger
 				time = 21;
 				roundTimer();
 				document.getElementById('pageStartPlayer').style.display="none";				
@@ -206,6 +205,13 @@
 					return;
 				}
 				document.getElementById('guessWord').innerHTML = roundWords[roundWords.length-1];
+			},
+			
+			nextPlayerOrStartRound:function() {
+				document.getElementById('pageResultPlayer').style.display="none";
+				if (!roundWords.length) game.start();
+				else game.startPlayer();
+				
 			}
 		}
 	}
@@ -267,7 +273,7 @@
 	<div id="pageResultPlayer" style='display:none'>
 		<p>отгадано слов</p>
 		<p id="countGuessWord">0</p>
-		<br><input class="button" type="submit" value="далее" onclick="game.();">
+		<br><input class="button" type="submit" value="далее" onclick="game.nextPlayerOrStartRound();">
 	</div>
 </body>
 </html>
