@@ -73,9 +73,7 @@
 	.top {margin-top: 35px;}
 	
 	.guessWord {
-		width: 45px;
 		text-align:center;
-		padding: 10px 10px;
 		border: none;
 		font-size: 30px;
 		color: MistyRose;
@@ -111,6 +109,7 @@
 		var roundWords;
 		var time = 0;
 		var guessWordCount = 0;
+		var currentPlayerName;
 		
 		var roundTimer = function() {
 			time--;
@@ -185,6 +184,10 @@
 				document.getElementById('guessWord').innerHTML = roundWords[roundWords.length-1];
 				document.getElementById('pageStartRound').style.display="none";				
 				document.getElementById('pageStartPlayer').style.display="block";
+				
+				currentPlayerName = teams[0][0];
+				document.getElementById('currentStartPlayer').innerHTML = currentPlayerName;
+
 			},
 			
 			startPlayer:function() {
@@ -208,13 +211,31 @@
 			},
 			
 			nextPlayerOrStartRound:function() {
+				
+				guessWordCount = 0;
 				document.getElementById('pageResultPlayer').style.display="none";
 				if (!roundWords.length) game.start();
-				else game.startPlayer();
-				
+				else {
+						for (var i = 0; i < teamsCount; i++){
+							for (var j = 0; j < 2; j++){
+								if (teams[i][j] == currentPlayerName) {
+									var nextTeam = (i+1 == teamsCount) ? 0 : i+1;
+									var nextIdx = (i+1 == teamsCount) ? (j % 2 == 0 ? 1 : 0 ) : j;
+									currentPlayerName = teams[nextTeam][nextIdx];
+									document.getElementById('currentStartPlayer').innerHTML = currentPlayerName;
+									return;
+								}
+							}	
+						}
+						
+						
+						
+					game.startPlayer();
+				}					
 			}
 		}
 	}
+	
 	var game = Game();
 
 	</script>
@@ -223,7 +244,7 @@
 	<div id="page1">
 		<div class="amount">
 			<p>Количество команд</p>
-			<span class="down plusMinus">--</span>
+			<span class="down">--</span>
 			<input type="text" id="countTeams"  value="1">
 			<span class="up">+</span>
 		</div>
@@ -259,8 +280,8 @@
 	</div>
 	
 	<div id="pageStartPlayer" style='display:none'>
-		<p>Команда 1</p>
-		<p>Игрок 1</p>
+		<P>Сейчас играет</p>
+		<p id="currentStartPlayer"></p>
 		<br><input class="button" type="submit" value="начать" onclick="game.startPlayer();">
 	</div>
 	
